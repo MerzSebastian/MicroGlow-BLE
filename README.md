@@ -89,9 +89,11 @@ Examples:
 
 ---
 
+
 ## License
 
-MIT
+This project is licensed under the GNU General Public License v3.0 (GPLv3).
+See the LICENSE file for full terms.
 
 Edit these values in the `.ino` file as needed:
 
@@ -184,9 +186,12 @@ Send RGB values as a comma-separated string to control the LEDs:
 - Add automatic color cycling
 - Implement music reactive lighting
 
+
 ## License
 
-Free to use and modify for personal and commercial projects.
+This project is licensed under the GNU General Public License v3.0 (GPLv3).
+You must comply with the terms of the GPLv3 when using, modifying, or distributing this project.
+See the LICENSE file for details.
 
 ## Credits
 
