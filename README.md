@@ -17,6 +17,7 @@ Minimalistic Bluetooth LED controller for ESP32-S3 and WS2812B. Use it for ringl
 
 ---
 
+
 ## Getting Started
 
 1. **Download the latest release:**
@@ -29,12 +30,23 @@ Minimalistic Bluetooth LED controller for ESP32-S3 and WS2812B. Use it for ringl
      - FastLED
      - Preferences (built-in for ESP32)
    - Select your ESP32-S3 board and COM port
-   - Upload the sketch
 
-3. **Install the Android app:**
+3. **Customize LED settings (optional):**
+   - Edit these values in the `bluetooth_ws2812b_light.ino` file to match your hardware:
+
+     ```cpp
+     #define LED_PIN     13        // GPIO pin for WS2812B data
+     #define NUM_LEDS    16       // Number of LEDs in your ring
+     ```
+
+4. **Upload the sketch:**
+   - Click Upload in Arduino IDE
+   - Open Serial Monitor (115200 baud) to see connection status
+
+5. **Install the Android app:**
    - Transfer the APK to your phone and install it
 
-4. **Connect and control:**
+6. **Connect and control:**
    - Power up your hardware
    - Open the app and connect via Bluetooth
    - Send RGB values to control the LEDs
@@ -95,20 +107,6 @@ Examples:
 This project is licensed under the GNU General Public License v3.0 (GPLv3).
 See the LICENSE file for full terms.
 
-Edit these values in the `.ino` file as needed:
-
-```cpp
-#define LED_PIN     13        // GPIO pin for WS2812B data
-#define NUM_LEDS    16       // Number of LEDs in your ring
-```
-
-## Uploading
-
-1. Open `bluetooth_ws2812b_light.ino` in Arduino IDE
-2. Select the correct board and port
-3. Click Upload
-4. Open Serial Monitor (115200 baud) to see connection status
-
 ## Usage
 
 ### Connecting via Bluetooth
@@ -119,21 +117,6 @@ Edit these values in the `.ino` file as needed:
    - **Android:** nRF Connect, BLE Scanner, Serial Bluetooth Terminal
    - **iOS:** nRF Connect, LightBlue
    - **Windows/Mac:** nRF Connect, Web Bluetooth apps
-
-### Sending Commands
-
-Send RGB values as a comma-separated string to control the LEDs:
-
-**Format:** `R,G,B`
-
-**Examples:**
-- `255,0,0` - Red
-- `0,255,0` - Green  
-- `0,0,255` - Blue
-- `255,255,255` - White
-- `255,128,0` - Orange
-- `128,0,128` - Purple
-- `0,0,0` - Off
 
 ### Using nRF Connect App
 
