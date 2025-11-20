@@ -1,0 +1,98 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # Triggers on version tags like v1.0.0
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.38.0-0.1.pre'
+          channel: 'beta'
+          cache: true
+
+      - name: Cache Flutter dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.pub-cache
+            flutter-app/ble_ws2812b/.dart_tool
+            flutter-app/ble_ws2812b/build
+          key: ${{ runner.os }}-flutter-${{ hashFiles('flutter-app/ble_ws2812b/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-flutter-
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            flutter-app/ble_ws2812b/android/.gradle
+          key: ${{ runner.os }}-gradle-${{ hashFiles('flutter-app/ble_ws2812b/android/**/*.gradle*', 'flutter-app/ble_ws2812b/android/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Get Flutter dependencies
+        working-directory: flutter-app/ble_ws2812b
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: flutter-app/ble_ws2812b
+        run: flutter build apk --release
+
+      - name: Create Arduino ZIP
+        run: |
+          cd bluetooth_ws2812b_light
+          zip -r ../arduino-project.zip bluetooth_ws2812b_light.ino
+          cd ..
+
+      - name: Get version from tag
+        id: get_version
+        run: |
+          if [ "${{ github.ref_type }}" == "tag" ]; then
+            echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=dev-$(date +'%Y%m%d-%H%M%S')" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            flutter-app/ble_ws2812b/build/app/outputs/flutter-apk/app-release.apk
+            arduino-project.zip
+          body: |
+            ## Release ${{ steps.get_version.outputs.VERSION }}
+            
+            ### What's included:
+            - **app-release.apk**: Flutter Android application for controlling the LED ring
+            - **arduino-project.zip**: Arduino sketch for ESP32-S3
+            
+            ### Installation:
+            1. Flash the Arduino sketch to your ESP32-S3 board
+            2. Install the APK on your Android device
+            3. Connect via Bluetooth and control your WS2812B LEDs!
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
