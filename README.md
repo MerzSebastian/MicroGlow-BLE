@@ -3,11 +3,12 @@
 
 # MicroGlow BLE
 
-Minimalistic Bluetooth LED controller for ESP32-S3 and WS2812B. Use it for ringlights, strips, accent lighting, or any creative LED project.
+Minimalistic Bluetooth LED controller for ESP32-S3 and WS2812B. Use it for ringlights, strips, accent lighting, or any creative LED project. I used it for a microscope lens light. I also included the stl file in the assets folder.
 
 <p align="center">
    <img src="assets/app.png" alt="App Screenshot" width="200"/>
    <img src="assets/hardware.png" alt="Hardware Photo" width="200"/>
+   <img src="assets/stl.jpg" alt="STL Photo" width="320"/>
 </p>
 
 ---
